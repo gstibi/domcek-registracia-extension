@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+    Hello, world! <input type="button" value="Close" onclick="google.script.host.close()" />
+    <button onclick="google.script.run.createTriggers()">create trigger</button>
+
+    <form id="mailingForm">
+      <label for="timestamp">Vyper stĺpec s časovou pečiatkou</label>
+      <select name="timestamp" required>
+        <? const headers = getColumnHeaders()?>
+        <? headers.forEach( h => { ?>
+          <option id="timestamp-<?= h ?>"><?= h ?></option>
+        <? }) ?>
+      </select>
+
+      <label for="email">Vyper stĺpec s emailovou adresou</label>
+      <select name="email" required>
+        <? headers.forEach( h => { ?>
+          <option id="email-<?= h ?>"><?= h ?></option>
+        <? }) ?>
+      </select>
+
+      <label for="firstname">Vyper stĺpec s krstným menom</label>
+      <select name="firstname" required>
+        <? headers.forEach( h => { ?>
+          <option id="firstname-<?= h ?>"><?= h ?></option>
+        <? }) ?>
+      </select>
+
+      <label for="variableSymbol">Vyper stĺpec kam sa zapíše variabilný symbol</label>
+      <select name="variableSymbol" required>
+        <? headers.forEach( h => { ?>
+          <option id="variableSymbol-<?= h ?>"><?= h ?></option>
+        <? }) ?>
+      </select>
+
+      <label for="emailSend">Vyper stĺpec kam sa zaznačí že mail bol odoslaný</label>
+      <select name="emailSend" required>
+        <? headers.forEach( h => { ?>
+          <option id="emailSend-<?= h ?>"><?= h ?></option>
+        <? }) ?>
+      </select>
+
+      <label for="triggerTime">Vyber čas kedy sa budú maily odosielať</label>
+      <input id="triggerTime" type="time" name="triggerTime" value="12:00" required/>
+
+      <br/>
+      <button onclick="sendInput(this.parentNode)">Potvrdiť</button>
+      <button onclick="google.script.host.close()">Zrušiť</button>
+    </form>
+    <br/>
+    <br/>
+    <div id="status">Status none</div>
+
+    <script>
+      function sendInput(input) {
+        google.script.run
+          .withSuccessHandler(onSuccess)
+          .withFailureHandler(onFailure)
+          .processMailingForm(input)
+      }
+
+      function onSuccess() {
+        document.getElementById("status").innerHTML = "success"
+      }
+
+      function onFailure() {
+        document.getElementById("status").innerHTML = "failure"
+      }
+    </script>
+  </body>
+</html>
